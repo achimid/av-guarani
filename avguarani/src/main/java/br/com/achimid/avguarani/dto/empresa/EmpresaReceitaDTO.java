@@ -1,19 +1,22 @@
 package br.com.achimid.avguarani.dto.empresa;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
 
 @Data
-public class ReceitaEmpresaDTO {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class EmpresaReceitaDTO {
 
     private String status;
     private String message;
-    private Billing billing;
+    private BillingDTO billing;
     private String CNPJ;
     private String tipo;
 
@@ -24,10 +27,10 @@ public class ReceitaEmpresaDTO {
     private String fantasia;
 
     @JsonProperty("atividade_principal")
-    private Collection<Atividade> atividadePrincipal;
+    private Collection<AtividadeDTO> atividadePrincipal;
 
     @JsonProperty("atividades_secundarias")
-    private Collection<Atividade> atividadesSecundarias;
+    private Collection<AtividadeDTO> atividadesSecundarias;
 
     private String naturezaJuridica;
     private String logradouro;
@@ -58,35 +61,14 @@ public class ReceitaEmpresaDTO {
     @JsonProperty("capital_social")
     private BigDecimal capitalSocial;
 
-    private Collection<QuadroSA> qsa;
+    private Collection<QuadroSADTO> qsa;
 
     private Object extra;
 
-    @Data
-    class Billing {
-        private boolean free;
-        private boolean database;
-    }
 
-    @Data
-    class Atividade {
-        private String code;
-        private String text;
-    }
 
-    @Data
-    class QuadroSA {
-        private String nome;
-        private String qual;
 
-        @JsonProperty("pais_origem")
-        private String paisOrigem;
 
-        @JsonProperty("nome_rep_legal")
-        private String nomeRepLegal;
 
-        @JsonProperty("qual_rep_legal")
-        private String qualRepLegal;
-    }
 
 }

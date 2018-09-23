@@ -7,6 +7,6 @@ import java.util.Collection;
 
 public interface MoedaRepository extends CrudRepository<Moeda, Long> {
 
-    Collection<Moeda> findByCodigo(String codigo);
+    Moeda findByCodigo(String codigo);
 
 }

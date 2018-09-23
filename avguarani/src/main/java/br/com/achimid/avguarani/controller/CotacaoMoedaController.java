@@ -32,7 +32,7 @@ public class CotacaoMoedaController implements CotacaoMoedaControllerDoc{
         return ResponseEntity.ok(moeda.get());
     }
 
-    @GetMapping("/{codigo}")
+    @GetMapping("/codigo/{codigo}")
     public HttpEntity<Collection<Moeda>> getByCodigo(@PathVariable String codigo){
         Collection<Moeda> moedas = cotacaoMoedaService.findByCodigo(codigo);
         if(moedas.isEmpty()) return ResponseEntity.notFound().build();

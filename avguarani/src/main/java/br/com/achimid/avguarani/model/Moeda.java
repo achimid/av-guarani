@@ -15,10 +15,17 @@ public class Moeda extends ModelBase {
     @GeneratedValue
     private Long id;
 
-    private String codigo;
+    @Enumerated(EnumType.STRING)
+    private MoedaCodigoEnum codigo;
+
     private String nome;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataAtualizacao;
+
+    public boolean isDesatualizado(){
+        if(dataAtualizacao == null) return true;
+        
+    }
 
 }

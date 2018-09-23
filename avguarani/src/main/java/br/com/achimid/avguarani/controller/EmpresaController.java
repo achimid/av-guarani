@@ -37,6 +37,12 @@ public class EmpresaController implements EmpresaControllerDoc{
         return ResponseEntity.ok(empresa);
     }
 
+    @PostMapping("/{cnpj}")
+    public HttpEntity<?> importarEmpresa(@PathVariable String cnpj){
+        Empresa empresa = empresaService.importarEmpresa(cnpj);
+        return ResponseEntity.ok(empresa);
+    }
+
     @PutMapping
     public HttpEntity<?> update(@RequestBody Empresa empresa){
         return create(empresa);
@@ -48,6 +54,5 @@ public class EmpresaController implements EmpresaControllerDoc{
         empresaService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
 
 }
