@@ -4,7 +4,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 @Data
 @Entity
@@ -23,9 +25,6 @@ public class Moeda extends ModelBase {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataAtualizacao;
 
-    public boolean isDesatualizado(){
-        if(dataAtualizacao == null) return true;
-        
-    }
+
 
 }

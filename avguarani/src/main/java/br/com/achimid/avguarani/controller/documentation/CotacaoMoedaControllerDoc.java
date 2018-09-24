@@ -1,6 +1,7 @@
 package br.com.achimid.avguarani.controller.documentation;
 
 import br.com.achimid.avguarani.model.Moeda;
+import br.com.achimid.avguarani.model.MoedaCodigoEnum;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,5 +17,5 @@ public interface CotacaoMoedaControllerDoc {
     HttpEntity<Moeda> get(@PathVariable Long id);
 
     @ApiOperation("Buscar cotação por codigo")
-    HttpEntity<Collection<Moeda>> getByCodigo(@PathVariable String codigo);
+    HttpEntity<Moeda> getByCodigo(@PathVariable String codigo);
 }

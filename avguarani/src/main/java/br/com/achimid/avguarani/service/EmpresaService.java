@@ -80,8 +80,10 @@ public class EmpresaService {
         if (empresa == null) {
             EmpresaReceitaDTO empresaReceitaDTO = empresaReceitaClient.buscarEmpresa(cnpj);
 
-            empresa = this.parser(empresaReceitaDTO);
-            this.save(empresa);
+            if(empresaReceitaDTO != null) {
+                empresa = this.parser(empresaReceitaDTO);
+                this.save(empresa);
+            }
         }
 
         return empresa;

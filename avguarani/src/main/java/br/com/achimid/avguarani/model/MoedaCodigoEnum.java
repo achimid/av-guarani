@@ -20,4 +20,5 @@ public enum MoedaCodigoEnum {
     public String toString() {
         return codigo;
     }
+
 }

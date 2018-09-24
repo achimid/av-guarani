@@ -3,6 +3,7 @@ package br.com.achimid.avguarani.controller;
 import br.com.achimid.avguarani.controller.documentation.CotacaoMoedaControllerDoc;
 import br.com.achimid.avguarani.model.Empresa;
 import br.com.achimid.avguarani.model.Moeda;
+import br.com.achimid.avguarani.model.MoedaCodigoEnum;
 import br.com.achimid.avguarani.service.CotacaoMoedaService;
 import br.com.achimid.avguarani.service.EmpresaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +34,12 @@ public class CotacaoMoedaController implements CotacaoMoedaControllerDoc{
     }
 
     @GetMapping("/codigo/{codigo}")
-    public HttpEntity<Collection<Moeda>> getByCodigo(@PathVariable String codigo){
-        Collection<Moeda> moedas = cotacaoMoedaService.findByCodigo(codigo);
-        if(moedas.isEmpty()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(moedas);
+    public HttpEntity<Moeda> getByCodigo(@PathVariable String codigo){
+        MoedaCodigoEnum me = MoedaCodigoEnum.valueOf(codigo);
+        Moeda moeda = cotacaoMoedaService.buscarMoeda(me);
+        if(moeda == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(moeda);
     }
-
-
-
 
 
 }
