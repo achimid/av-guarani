@@ -1,16 +1,20 @@
 package br.com.achimid.avguarani.client;
 
+import br.com.achimid.avguarani.dto.empresa.EmpresaReceitaDTO;
 import br.com.achimid.avguarani.dto.moeda.AwesomeMoedaDTO;
-import br.com.achimid.avguarani.model.MoedaCodigoEnum;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import org.json.JSONObject;
+import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class MoedaAwesomeClient {
@@ -31,13 +35,31 @@ public class MoedaAwesomeClient {
         throw new IllegalStateException("API de terceiros indisponivel no momento.");
     }
 
-    public AwesomeMoedaDTO buscarMoeda(MoedaCodigoEnum codigo) {
-        ResponseEntity<AwesomeMoedaDTO> responseEntity = restTemplate.getForEntity(moedaAwesomeApiUrl.concat(codigo.toString()), AwesomeMoedaDTO.class);
-        if (HttpStatus.OK.equals(responseEntity.getStatusCode())) {
-            return responseEntity.getBody();
+    public AwesomeMoedaDTO buscarMoeda(String codigo) {
+        String url = moedaAwesomeApiUrl.concat(codigo).concat("/1");
+        try {
+            ResponseEntity<List> responseEntity = restTemplate.exchange
+                    (url, HttpMethod.GET, new HttpEntity<>(createHeaders()), List.class);
+
+            if (responseEntity != null && HttpStatus.OK.equals(responseEntity.getStatusCode())) {
+                // algo de errado estou fazendo para precisar converter dessa meneira.
+                return new ObjectMapper().convertValue((Map) responseEntity.getBody().iterator().next(), AwesomeMoedaDTO.class);
+            }
+
+            throw new IllegalStateException("API de terceiros indisponivel no momento.");
+        }catch (RuntimeException se){
+            throw new IllegalStateException("API de terceiros indisponivel no momento.", se);
         }
-        throw new IllegalStateException("API de terceiros indisponivel no momento.");
+
     }
 
+    HttpHeaders createHeaders(){
+        return new HttpHeaders() {{
+            set( "User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:62.0) Gecko/20100101 Firefox/62.0");
+            set( "Content-Type", "application/json");
+            set( "Accept", "application/json");
+        }};
+    }
 
 }
+

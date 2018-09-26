@@ -3,11 +3,9 @@ package br.com.achimid.avguarani.service;
 import br.com.achimid.avguarani.client.MoedaAwesomeClient;
 import br.com.achimid.avguarani.dto.moeda.AwesomeMoedaDTO;
 import br.com.achimid.avguarani.model.Moeda;
-import br.com.achimid.avguarani.model.MoedaCodigoEnum;
 import br.com.achimid.avguarani.repository.MoedaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -24,49 +22,36 @@ public class CotacaoMoedaService {
     @Autowired
     private MoedaAwesomeClient moedaAwesomeClient;
 
-    public Moeda save(Moeda moeda){
+    public Moeda save(Moeda moeda) {
+        moeda.setDataAtualizacao(GregorianCalendar.getInstance().getTime());
         return moedaRepository.save(moeda);
     }
 
-    public Collection<Moeda> findAll(){
-        return (Collection<Moeda>) moedaRepository.findAll();
+    public Collection<Moeda> findAll() {
+        Collection<Moeda> moedas = (Collection<Moeda>) moedaRepository.findAll();
+        moedas.forEach(m -> m = isMoedaDesatualizada(m) ? buscarMoeda(m.getCodigo()) : m);
+        return moedas;
     }
 
-    public Optional<Moeda> findById(Long id){
-        return moedaRepository.findById(id);
+    public boolean exists(String codigo) {
+        return moedaRepository.existsById(codigo);
     }
 
-    public Moeda findByCodigo(MoedaCodigoEnum codigo){
-        return moedaRepository.findByCodigo(codigo.toString());
-    }
-
-    public void delete(Long id){
-        moedaRepository.deleteById(id);
-    }
-
-    public boolean exists(Long id){
-        return moedaRepository.existsById(id);
-    }
-
-    private Moeda parse(AwesomeMoedaDTO awesomeMoedaDTO){
+    private Moeda parse(AwesomeMoedaDTO awesomeMoedaDTO) {
         Moeda moeda = new Moeda();
         moeda.setDataAtualizacao(GregorianCalendar.getInstance().getTime());
-        moeda.setCodigo(MoedaCodigoEnum.valueOf(awesomeMoedaDTO.getCode().concat("-").concat(awesomeMoedaDTO.getCodein())));
+        moeda.setCodigo(awesomeMoedaDTO.getCode(), awesomeMoedaDTO.getCodein());
         return moeda;
     }
 
-    @Cacheable("buscarMoedaAwesome")
-    public Moeda buscarMoeda(MoedaCodigoEnum codigo){
-        Moeda moeda = moedaRepository.findByCodigo(codigo.toString());
+    public Moeda buscarMoeda(String codigo) {
+        Optional<Moeda> op = moedaRepository.findById(codigo);
+        Moeda moeda = op.isPresent() ? op.get() : null;
 
-        if(moeda == null){
+        if (moeda == null || isMoedaDesatualizada(moeda)) {
             AwesomeMoedaDTO awesomeMoedaDTO = moedaAwesomeClient.buscarMoeda(codigo);
-            if(awesomeMoedaDTO != null){
+            if (awesomeMoedaDTO != null) {
                 moeda = parse(awesomeMoedaDTO);
-
-                Moeda moedaTmp = moedaRepository.findByCodigo(moeda.getCodigo().toString());
-                moeda.setId(moedaTmp.getId());
-
                 moedaRepository.save(moeda);
             }
         }
@@ -74,11 +59,11 @@ public class CotacaoMoedaService {
         return moeda;
     }
 
-    public boolean isDesatualizado(Date dataAtualizacao){
-        if(dataAtualizacao == null) return true;
-
+    // Poderia ter utilizado o @Cacheable, porem acredito que desta maneira se adeque melhor,
+    // mesmo sabendo que API do terceiro atualiza a cada 10 minutos
+    public boolean isMoedaDesatualizada(final Moeda moeda) {
         Calendar cal = GregorianCalendar.getInstance();
-        cal.setTime(dataAtualizacao);
+        cal.setTime(moeda.getDataAtualizacao());
         cal.add(Calendar.MINUTE, moedaThreshold);
 
         Date now = GregorianCalendar.getInstance().getTime();

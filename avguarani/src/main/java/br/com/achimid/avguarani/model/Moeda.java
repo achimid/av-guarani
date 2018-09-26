@@ -17,14 +17,17 @@ public class Moeda extends ModelBase {
     @GeneratedValue
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private MoedaCodigoEnum codigo;
+    @Column(unique = true)
+    private String codigo;
 
     private String nome;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataAtualizacao;
 
+    public void setCodigo(String code, String codeIn){
+        this.codigo = code + '-' + codeIn;
+    }
 
 
 }

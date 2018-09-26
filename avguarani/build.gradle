@@ -28,6 +28,8 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-cache')
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('org.json:json:20140107')
+	compile('com.google.code.gson:gson:2.8.1')
 	compile('io.springfox:springfox-swagger2:2.4.0')
 	compile('io.springfox:springfox-swagger-ui:2.4.0')
 	runtime('org.springframework.boot:spring-boot-devtools')
