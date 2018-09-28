@@ -4,11 +4,13 @@ import br.com.achimid.avguarani.client.MoedaAwesomeClient;
 import br.com.achimid.avguarani.dto.moeda.AwesomeMoedaDTO;
 import br.com.achimid.avguarani.model.Empresa;
 import br.com.achimid.avguarani.model.Moeda;
+import br.com.achimid.avguarani.repository.EmpresaRepository;
 import br.com.achimid.avguarani.repository.MoedaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
@@ -50,16 +52,14 @@ public class CotacaoMoedaService {
     }
 
     public Moeda buscarMoeda(String codigo) {
-        // TODO: remover, apenas para teste
-        //moedaRepository.deleteAll();
-
         Moeda moeda = moedaRepository.findByCodigo(codigo);
 
         if (moeda == null || isMoedaDesatualizada(moeda)) {
             AwesomeMoedaDTO awesomeMoedaDTO = moedaAwesomeClient.buscarMoeda(codigo);
             if (awesomeMoedaDTO != null) {
-                moeda = parse(awesomeMoedaDTO);
-                moedaRepository.save(moeda);
+                Moeda moedaNew = parse(awesomeMoedaDTO);
+                if(moeda != null) moedaNew.setId(moeda.getId());
+                moeda = moedaRepository.save(moedaNew);
             }
         }
 
@@ -88,5 +88,10 @@ public class CotacaoMoedaService {
 
     public boolean validarCodigo(String codigo){
         return Arrays.asList("USD-BRL","USD-BRLT","CAD-BRL","EUR-BRL","GBP-BRL","ARS-BRL","BTC-BRL").contains(codigo);
+    }
+
+    @PostConstruct
+    public void atualizarTodasMoedas(){
+        Arrays.asList("USD-BRL","USD-BRLT","CAD-BRL","EUR-BRL","GBP-BRL","ARS-BRL","BTC-BRL").forEach(codigo -> buscarMoeda(codigo));
     }
 }

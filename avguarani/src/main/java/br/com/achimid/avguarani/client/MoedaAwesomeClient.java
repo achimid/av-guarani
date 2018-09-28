@@ -27,6 +27,7 @@ public class MoedaAwesomeClient {
     @Autowired
     private RestTemplate restTemplate;
 
+    // not working
     public Collection<AwesomeMoedaDTO> buscarTodasMoedas() {
         ResponseEntity<List> responseEntity = restTemplate.getForEntity(moedaAwesomeApiUrl.concat(QUERY_TODAS), List.class);
         if (HttpStatus.OK.equals(responseEntity.getStatusCode())) {
@@ -57,7 +58,6 @@ public class MoedaAwesomeClient {
         return new HttpHeaders() {{
             set( "User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:62.0) Gecko/20100101 Firefox/62.0");
             set( "Content-Type", "application/json");
-            set( "Accept", "application/json");
         }};
     }
 
