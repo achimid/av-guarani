@@ -83,7 +83,7 @@ public class CotacaoMoedaService {
     }
 
     public void atualizaMoedaEmpresa(@NotNull final Empresa empresa){
-        empresa.setMoeda(buscarMoeda(empresa.getMoeda().getCodigo()));
+        if(empresa.getMoeda() != null) empresa.setMoeda(buscarMoeda(empresa.getMoeda().getCodigo()));
     }
 
     public boolean validarCodigo(String codigo){

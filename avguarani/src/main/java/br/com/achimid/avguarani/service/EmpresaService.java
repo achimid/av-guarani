@@ -68,6 +68,7 @@ public class EmpresaService {
 
         empresa.setCnpj(empresaDTO.getCNPJ());
         empresa.setEmail(empresaDTO.getEmail());
+        empresa.setNome(empresaDTO.getNome());
 
         Endereco endereco = new Endereco();
         empresa.setEndereco(endereco);

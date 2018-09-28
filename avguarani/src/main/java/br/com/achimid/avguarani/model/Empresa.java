@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class Empresa extends ModelBase{
 
     @Id
@@ -18,6 +18,7 @@ public class Empresa extends ModelBase{
     private String cnpj;
     private String cnpjUnmask;
     private String email;
+    private String nome;
 
     @OneToOne(cascade = CascadeType.PERSIST)
     private Endereco endereco;
