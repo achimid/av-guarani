@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -16,6 +17,7 @@ import java.util.Collection;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @TestPropertySource(locations="classpath:test.properties")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class TestEmpresaService {
 
     @Autowired
@@ -27,7 +29,7 @@ public class TestEmpresaService {
     Empresa empresaComp = UtilStaticStub.getEmpresa();
 
     @Test
-    public void testSalvarEmpresa(){
+    public void testSalvarEmpresaSuccess(){
         Empresa empresa = service.save(UtilStaticStub.getEmpresa());
 
         Assert.assertNotNull(empresa.getId());
@@ -38,12 +40,12 @@ public class TestEmpresaService {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testSalvarEmpresaNull(){
+    public void testSalvarEmpresaWithNull(){
         service.save(null);
     }
 
     @Test
-    public void testFindAll(){
+    public void testFindAllSuccess(){
         Empresa empresa = service.save(UtilStaticStub.getEmpresa());
 
         Collection<Empresa> all = service.findAll();
@@ -54,12 +56,12 @@ public class TestEmpresaService {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void testFindByIdInvalido(){
+    public void testFindByIdInvalid(){
         service.findById(999999l);
     }
 
     @Test
-    public void testFindById(){
+    public void testFindByIdSuccess(){
         Empresa empresa1 = service.save(UtilStaticStub.getEmpresa());
         Empresa empresa2 = service.findById(empresa1.getId());
 
