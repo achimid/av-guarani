@@ -60,7 +60,7 @@ public class EmpresaController implements EmpresaControllerDoc{
     public HttpEntity<?> delete(@PathVariable Long id){
         if(!empresaService.exists(id)) return ResponseEntity.notFound().build();
         empresaService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{id}/{moeda}")
