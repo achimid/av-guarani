@@ -6,6 +6,7 @@ import br.com.achimid.avguarani.service.CotacaoMoedaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +28,13 @@ public class CotacaoMoedaController implements CotacaoMoedaControllerDoc{
 
     @GetMapping("/{codigo}")
     public HttpEntity<Moeda> get(@PathVariable String codigo){
+        if(!cotacaoMoedaService.validarCodigo(codigo))
+            return ResponseEntity.badRequest().build();
+
         Moeda moeda = cotacaoMoedaService.buscarMoeda(codigo);
         if(moeda == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(moeda);
     }
+
+
 }

@@ -23,7 +23,7 @@ public class Empresa extends ModelBase{
     private Endereco endereco;
 
     @OneToOne
-    private Moeda meoda;
+    private Moeda moeda;
 
     public void setCnpj(String cnpj){
         if(cnpj != null) this.cnpjUnmask = cnpj.replaceAll("[^\\d.]", "");

@@ -14,7 +14,7 @@ public interface EmpresaControllerDoc {
     HttpEntity<Collection<Empresa>> all();
 
     @ApiOperation("Busca empresa por id")
-    HttpEntity<Empresa> get(@PathVariable Long id);
+    HttpEntity<?> get(@PathVariable Long id);
 
     @ApiOperation("Cria uma empresa")
     HttpEntity<Empresa> create(@RequestBody Empresa empresa);

@@ -1,5 +1,6 @@
 package br.com.achimid.avguarani.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,6 +15,7 @@ public class Endereco extends ModelBase {
 
     @Id
     @GeneratedValue
+    @JsonIgnore
     private Long id;
 
     private String logradouro;
